@@ -3,16 +3,16 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "monitized-llm"
+name = "pybsv-scaffolding"
 version = "0.1.0"
-description = "BSV Blockchain-based LLM training and hosting with full data provenance"
+description = "A starter project for building Python applications on the BSV blockchain"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
-    {name = "Your Name", email = "your.email@example.com"}
+    {name = "Seth Chalmers", email = "seth@example.com"}
 ]
-keywords = ["bsv", "blockchain", "llm", "machine-learning", "teranode"]
+keywords = ["bsv", "blockchain", "python", "teranode", "scaffolding"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -35,13 +35,16 @@ dependencies = [
 dev = [
     "pytest>=7.4.0",
     "pytest-asyncio>=0.23.0",
-    "black",
-    "ruff",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.8.0",
+    "mypy>=1.13.0",
+    "bandit[toml]>=1.7.0",
+    "pre-commit>=3.6.0",
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/yourusername/monitized-llm"
-"Bug Tracker" = "https://github.com/yourusername/monitized-llm/issues"
+"Homepage" = "https://github.com/sethjchalmers/pybsv-scaffolding"
+"Bug Tracker" = "https://github.com/sethjchalmers/pybsv-scaffolding/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -50,10 +53,57 @@ where = ["src"]
 asyncio_mode = "auto"
 testpaths = ["tests"]
 
-[tool.black]
-line-length = 100
-target-version = ['py310', 'py311', 'py312']
-
 [tool.ruff]
 line-length = 100
-select = ["E", "F", "W", "I", "N"]
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # Pyflakes
+    "I",      # isort
+    "N",      # pep8-naming
+    "UP",     # pyupgrade
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "SIM",    # flake8-simplify
+    "TCH",    # flake8-type-checking
+    "PTH",    # flake8-use-pathlib
+    "RUF",    # Ruff-specific rules
+]
+ignore = [
+    "E501",   # line too long (handled by formatter)
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["bsv_llm"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+exclude = ["tests", "venv", ".venv"]
+
+[tool.bandit]
+exclude_dirs = ["tests", "venv", ".venv"]
+skips = ["B101"]  # Skip assert warnings in non-test code
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = ["tests/*", "*/__pycache__/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
