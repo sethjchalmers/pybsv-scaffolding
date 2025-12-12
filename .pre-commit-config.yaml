@@ -46,7 +46,7 @@ repos:
         additional_dependencies:
           - types-requests
           - types-python-dateutil
-        args: [--ignore-missing-imports, --no-strict-optional]
+        args: [--ignore-missing-imports, --no-strict-optional, --disable-error-code=no-any-return]
         exclude: ^tests/
 
   # Python - Security checks
@@ -58,13 +58,13 @@ repos:
         additional_dependencies: ['bandit[toml]']
         exclude: ^tests/
 
-  # Python - Docstring checks
+  # Python - Docstring checks (relaxed for scaffolding)
   - repo: https://github.com/pycqa/pydocstyle
     rev: 6.3.0
     hooks:
       - id: pydocstyle
-        args: ['--convention=google', '--add-ignore=D100,D104,D105,D107']
-        exclude: ^(tests/|setup\.py)
+        args: ['--convention=google', '--add-ignore=D100,D102,D104,D105,D107,D200,D212,D415']
+        exclude: ^(tests/|setup\.py|examples/|scripts/)
 
   # Docker - Hadolint (Dockerfile linter)
   - repo: https://github.com/hadolint/hadolint

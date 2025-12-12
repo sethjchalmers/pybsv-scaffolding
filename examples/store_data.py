@@ -19,24 +19,19 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from bsv_llm import BSVClient, get_config
-from bsv_llm.storage import DatasetStorage, DataType
-from bsv_llm.client import UTXOInfo
 
 
 async def store_simple_data():
     """Example: Store simple text data."""
     print("\n=== Store Simple Text Data ===\n")
-    
-    config = get_config()
-    storage = DatasetStorage()
-    
+
     # Sample data to store
     data = "Hello, BSV Blockchain! This is a test message for the LLM training project."
-    
+
     print(f"Data to store: {data}")
     print(f"Data size: {len(data)} bytes")
     print(f"Data hash: {BSVClient.hash_data(data.encode())}")
-    
+
     # Note: In production, you would get a real UTXO from your wallet
     # For this demo, we'll show what the call would look like
     print("\n⚠️  To actually store data, you need:")
@@ -50,7 +45,7 @@ async def store_simple_data():
         satoshis=10000,
         script="your_locking_script"
     )
-    
+
     result = await storage.store(
         data=data,
         name="test_message_001",
@@ -58,7 +53,7 @@ async def store_simple_data():
         description="Test message for BSV LLM project",
         source_utxo=utxo,
     )
-    
+
     if result.success:
         print(f"Stored! TXID: {result.txid}")
     """)
@@ -67,9 +62,7 @@ async def store_simple_data():
 async def store_json_data():
     """Example: Store JSON dataset metadata."""
     print("\n=== Store JSON Data ===\n")
-    
-    storage = DatasetStorage()
-    
+
     # Sample dataset metadata
     dataset_info = {
         "name": "training_dataset_v1",
@@ -80,29 +73,27 @@ async def store_json_data():
         "created_by": "data_pipeline_001",
         "checksum": "sha256:abc123...",
     }
-    
+
     print("Dataset metadata:")
     print(json.dumps(dataset_info, indent=2))
-    
+
     print("\n⚠️  Call storage.store() with source_utxo to store on-chain")
 
 
 async def store_model_weights_reference():
     """Example: Store a reference to model weights stored off-chain."""
     print("\n=== Store Model Weights Reference ===\n")
-    
-    storage = DatasetStorage()
-    
+
     # For large files like model weights, store a hash reference
     # The actual weights can be stored on IPFS, S3, or other storage
-    
+
     # Simulate model weights hash
     fake_weights = b"pretend these are 100MB of model weights..."
     weights_hash = BSVClient.hash_data(fake_weights)
-    
+
     print(f"Model weights hash: {weights_hash}")
     print("External storage URL: ipfs://QmXxx...")
-    
+
     print("\nExample reference storage:")
     print("""
     result = await storage.store_reference(
@@ -126,21 +117,21 @@ async def main():
     print("=" * 60)
     print("BSV Data Storage Examples")
     print("=" * 60)
-    
+
     # Check configuration
     config = get_config()
     errors = config.validate()
-    
+
     if errors:
         print("\n⚠️  Configuration warnings:")
         for error in errors:
             print(f"   - {error}")
         print("\nCopy .env.example to .env and configure your settings.")
-    
+
     await store_simple_data()
     await store_json_data()
     await store_model_weights_reference()
-    
+
     print("\n" + "=" * 60)
     print("Examples complete!")
     print("=" * 60)

@@ -14,7 +14,7 @@ Write-Host ""
 # Check prerequisites
 function Test-Prerequisites {
     $errors = @()
-    
+
     # Check Docker
     Write-Host "Checking Docker..." -ForegroundColor Yellow
     try {
@@ -27,7 +27,7 @@ function Test-Prerequisites {
     } catch {
         $errors += "Docker is not installed or not in PATH"
     }
-    
+
     # Check Docker Compose
     Write-Host "Checking Docker Compose..." -ForegroundColor Yellow
     try {
@@ -40,7 +40,7 @@ function Test-Prerequisites {
     } catch {
         $errors += "Docker Compose is not available"
     }
-    
+
     # Check Git
     Write-Host "Checking Git..." -ForegroundColor Yellow
     try {
@@ -53,7 +53,7 @@ function Test-Prerequisites {
     } catch {
         $errors += "Git is not installed or not in PATH"
     }
-    
+
     # Check WSL2 (for running bash scripts)
     Write-Host "Checking WSL2..." -ForegroundColor Yellow
     try {
@@ -66,7 +66,7 @@ function Test-Prerequisites {
     } catch {
         Write-Host "  [WARN] WSL2 check skipped" -ForegroundColor Yellow
     }
-    
+
     # Check available disk space
     Write-Host "Checking disk space..." -ForegroundColor Yellow
     $drive = (Get-Location).Drive
@@ -76,7 +76,7 @@ function Test-Prerequisites {
     } else {
         $errors += "Insufficient disk space: $($freeSpaceGB)GB (need 40GB+)"
     }
-    
+
     # Check RAM (approximate)
     Write-Host "Checking system memory..." -ForegroundColor Yellow
     $totalRAM = [math]::Round((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB, 2)
@@ -85,9 +85,9 @@ function Test-Prerequisites {
     } else {
         Write-Host "  [WARN] Total RAM: $($totalRAM)GB (32GB+ recommended)" -ForegroundColor Yellow
     }
-    
+
     Write-Host ""
-    
+
     if ($errors.Count -gt 0) {
         Write-Host "Errors found:" -ForegroundColor Red
         foreach ($err in $errors) {
@@ -95,7 +95,7 @@ function Test-Prerequisites {
         }
         return $false
     }
-    
+
     Write-Host "All prerequisites met!" -ForegroundColor Green
     return $true
 }
@@ -103,7 +103,7 @@ function Test-Prerequisites {
 # Clone Teratestnet repository
 function Get-TeratestnetRepo {
     $repoPath = Join-Path (Get-Location) "teranode-teratestnet"
-    
+
     if (Test-Path $repoPath) {
         Write-Host "Teratestnet repository already exists at: $repoPath" -ForegroundColor Yellow
         $update = Read-Host "Do you want to update it? (y/n)"
@@ -116,7 +116,7 @@ function Get-TeratestnetRepo {
         Write-Host "Cloning Teratestnet repository..." -ForegroundColor Yellow
         git clone https://github.com/bsv-blockchain/teranode-teratestnet.git
     }
-    
+
     return $repoPath
 }
 
@@ -174,7 +174,7 @@ Write-Host ""
 $proceed = Read-Host "Would you like to start Docker services directly? (This runs 'docker compose up -d') (y/n)"
 if ($proceed -eq "y") {
     Push-Location $repoPath
-    
+
     # Check if settings have been configured
     $settingsPath = Join-Path $repoPath "base\settings_local.conf"
     if (-not (Test-Path $settingsPath)) {
@@ -185,18 +185,18 @@ if ($proceed -eq "y") {
         Pop-Location
         exit 1
     }
-    
+
     Write-Host "Starting Docker services..." -ForegroundColor Yellow
     docker compose up -d
-    
+
     Write-Host ""
     Write-Host "Waiting for services to start..." -ForegroundColor Yellow
     Start-Sleep -Seconds 10
-    
+
     Write-Host ""
     Write-Host "Service Status:" -ForegroundColor Cyan
     docker compose ps
-    
+
     Pop-Location
 }
 

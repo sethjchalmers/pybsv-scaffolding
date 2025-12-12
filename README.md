@@ -12,11 +12,13 @@ A starter project for building Python applications on the BSV blockchain using T
 ## 📋 Prerequisites
 
 ### Required
+
 - **Python 3.10+** - [Download](https://python.org/)
 - **Docker & Docker Compose** - [Download](https://docker.com/get-started)
 - **Git** - [Download](https://git-scm.com/)
 
 ### Optional (for public node access)
+
 - **ngrok** - [Setup Guide](https://ngrok.com/download)
 
 ## 🚀 Quick Start
@@ -64,11 +66,11 @@ cd teranode-teratestnet
 wsl ./start-teratestnet.sh
 ```
 
-See [Teranode Setup](#teranode-setup) section for detailed instructions.
+See [Teranode Setup](#-teranode-setup) section for detailed instructions.
 
 ## 📁 Project Structure
 
-```
+```text
 pybsv-scaffolding/
 ├── src/
 │   └── bsv_llm/
@@ -97,6 +99,7 @@ pybsv-scaffolding/
 ## 🔧 Teranode Setup
 
 ### Hardware Requirements
+
 - **RAM:** 32GB+ (recommended)
 - **Disk:** 40GB+ available space
 - **OS:** Linux, macOS, or Windows with WSL2
@@ -106,6 +109,7 @@ pybsv-scaffolding/
 #### Option A: Using ngrok (No public IP required)
 
 1. **Install ngrok:**
+
    ```bash
    # Download from https://ngrok.com/download
    # Authenticate with your token
@@ -113,6 +117,7 @@ pybsv-scaffolding/
    ```
 
 2. **Run setup script:**
+
    ```bash
    cd teranode-teratestnet
    ./start-teratestnet.sh
@@ -166,14 +171,14 @@ from bsv import PrivateKey, P2PKH, Transaction, TransactionInput, TransactionOut
 async def create_transaction():
     # Create a private key
     priv_key = PrivateKey('your_wif_key_here')
-    
+
     # Build transaction
     tx = Transaction(
         inputs=[...],
         outputs=[...],
         version=1
     )
-    
+
     tx.sign()
     await tx.broadcast()
     print(f"TX ID: {tx.txid()}")
